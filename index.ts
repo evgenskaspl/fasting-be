@@ -1,19 +1,27 @@
-import fastify from 'fastify'
+import fastify from "fastify";
+import cors from "@fastify/cors";
+import { initModels } from "./src/models/index.js"; // Import DB & User model
+import { userRouter } from "./src/routes/user.routes.js";
 
-const server = fastify()
+const app = fastify();
 
-server.get('/ping', async (request, res) => {
-    return 'pong\n'
-})
+await app.register(cors, { origin: "*" });
 
-server.get('/', async (request, res) => {
-    res.send('Hello World!')
-})
+app.get("/ping", async (_, res) => res.code(200).send("PONG!"));
 
-server.listen({ port: 3000, host: '0.0.0.0' }, (err, address) => {
-    if (err) {
-        console.error(err)
-        process.exit(1)
-    }
-    console.log(`Server listening at ${address}`)
-})
+const start = async () => {
+  try {
+    await initModels();
+
+    app.register(userRouter, { prefix: "/api/v1/users" });
+
+    await app.ready();
+    await app.listen({ port: 3000, host: "0.0.0.0" });
+    console.log(`🚀 Server running on http://localhost:3000`);
+  } catch (err) {
+    console.error("❌ Error starting app:", err);
+    process.exit(1);
+  }
+};
+
+start();
