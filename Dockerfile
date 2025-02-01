@@ -4,13 +4,10 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm install --production
 
 COPY . .
 
-COPY wait-for-db.sh /usr/src/app/wait-for-db.sh
-RUN chmod +x /usr/src/app/wait-for-db.sh
-
 EXPOSE 3000
 
-CMD ["/usr/src/app/wait-for-db.sh", "npm", "run", "build"]
+CMD [ "npm", "run", "prod"]

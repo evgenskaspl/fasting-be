@@ -19,7 +19,7 @@ if (config.use_env_variable && process.env[config.use_env_variable]) {
     username: config.username,
     password: config.password,
     database: config.database,
-    logging: false, // Disable SQL logs
+    logging: false,
   });
 }
 
